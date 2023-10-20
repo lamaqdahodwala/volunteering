@@ -34,6 +34,16 @@ export const recommended_jobs: QueryResolvers['recommended_jobs'] = async () => 
   })
 }
 
+
+export const jobDetail: QueryResolvers['jobDetail'] = ({ id }) => {
+  return db.job.findUniqueOrThrow({
+    where: {
+      id: id
+    }
+  })
+}
+
+
 export const Job: JobRelationResolvers = {
   manager: (_obj, { root }) => {
     return db.job.findUnique({ where: { id: root?.id } }).manager()

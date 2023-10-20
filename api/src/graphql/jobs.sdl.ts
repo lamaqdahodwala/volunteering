@@ -12,6 +12,7 @@ export const schema = gql`
 
   type Query {
     recommended_jobs: [Job!]! @requireAuth
+    jobDetail(id: Int!): Job! @requireAuth
   }
 
   input CreateJobInput {
