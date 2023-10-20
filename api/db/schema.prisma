@@ -12,34 +12,44 @@ generator client {
 // to create migrations for them and apply to your dev DB.
 // TODO: Please remove the following example:
 model User {
-  id    Int     @id @default(autoincrement())
-  username String  @unique
-  roles  String @default("user")
-  manages Job[]
-  hashedPassword String
-  salt String
-  resetToken String?
+  id                  Int       @id @default(autoincrement())
+  username            String    @unique
+  roles               String    @default("user")
+  manages             Job[]
+  hashedPassword      String
+  salt                String
+  resetToken          String?
   resetTokenExpiresAt DateTime?
-  signups Signup[]
-
+  signups             Signup[]
+  watches             Tag[]
 }
 
 model Job {
-  id    Int     @id @default(autoincrement())
-  title String
+  id          Int      @id @default(autoincrement())
+  title       String
   description String
-  manager User @relation(fields: [managerId], references: [id])
-  managerId Int
+  manager     User     @relation(fields: [managerId], references: [id])
+  managerId   Int
   max_signups Int
   minimum_age Int
-  signups Signup[]
+  signups     Signup[]
+  tags        Tag[]
 }
 
 model Signup {
-  id    Int     @id @default(autoincrement())
-  on_job Job @relation(fields: [jobId], references: [id])
-  for_user User @relation(fields: [userId], references: [id])
-  userId Int
-  jobId Int
+  id        Int     @id @default(autoincrement())
+  on_job    Job     @relation(fields: [jobId], references: [id])
+  for_user  User    @relation(fields: [userId], references: [id])
+  userId    Int
+  jobId     Int
   completed Boolean @default(false)
+}
+
+model Tag {
+  id Int @id @default(autoincrement())
+
+  name        String
+  description String
+  on_jobs     Job[]
+  watched_by  User[]
 }
