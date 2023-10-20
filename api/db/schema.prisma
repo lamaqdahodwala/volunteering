@@ -16,6 +16,10 @@ model User {
   username String  @unique
   roles  String @default("user")
   manages Job[]
+  hashedPassword String
+  salt String
+  resetToken String?
+  resetTokenExpiresAt DateTime?
 
 }
 
