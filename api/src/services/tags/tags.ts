@@ -1,14 +1,55 @@
-import type { QueryResolvers, TagRelationResolvers } from 'types/graphql'
+import type { MutationResolvers, QueryResolvers, TagRelationResolvers } from 'types/graphql'
 
 import { db } from 'src/lib/db'
 
-export const tags: QueryResolvers['tags'] = () => {
-  return db.tag.findMany()
+export const myWatchedTags: QueryResolvers['myWatchedTags'] = async() => {
+  let user_id = context.currentUser.id
+
+  let user =  await db.user.findUnique({
+    where: {
+      id: user_id
+    },
+    include: {
+      watches: true
+    }
+  })
+
+  return user.watches
 }
 
-export const tag: QueryResolvers['tag'] = ({ id }) => {
-  return db.tag.findUnique({
-    where: { id },
+
+
+
+export const unwatchTag: MutationResolvers['unwatchTag'] = ({ id }) => {
+  let user_id = context.currentUser.id
+  return db.tag.update({
+    where: {
+      id: id
+    },
+    data: {
+      watched_by: {
+        disconnect: {
+          id: user_id
+        }
+      }
+    }
+  })
+}
+
+
+export const watchTag: MutationResolvers['watchTag'] = ({ id }) => {
+  let user_id = context.currentUser.id
+  return db.tag.update({
+    where: {
+      id: id
+    },
+    data: {
+      watched_by: {
+        connect: {
+          id: user_id
+        }
+      }
+    }
   })
 }
 
