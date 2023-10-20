@@ -2,13 +2,35 @@ import type { QueryResolvers, JobRelationResolvers } from 'types/graphql'
 
 import { db } from 'src/lib/db'
 
-export const jobs: QueryResolvers['jobs'] = () => {
-  return db.job.findMany()
-}
 
-export const job: QueryResolvers['job'] = ({ id }) => {
-  return db.job.findUnique({
-    where: { id },
+export const recommended_jobs: QueryResolvers['recommended_jobs'] = async () => {
+  let user_id = context.currentUser.id
+
+  let user = await db.user.findUnique({
+    where: {
+      id: user_id
+    },
+    include: {
+      watches: {
+        select: {
+          id: true,
+          name: true
+        }
+      }
+    }
+  })
+
+  let followed_tag_ids = user.watches.map((val) => val.id)
+  return db.job.findMany({
+    where: {
+      tags: {
+        some: {
+          id: {
+            in: followed_tag_ids
+          }
+        }
+      }
+    }
   })
 }
 
