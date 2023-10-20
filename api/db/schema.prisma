@@ -20,6 +20,7 @@ model User {
   salt String
   resetToken String?
   resetTokenExpiresAt DateTime?
+  signups Signup[]
 
 }
 
@@ -31,4 +32,14 @@ model Job {
   managerId Int
   max_signups Int
   minimum_age Int
+  signups Signup[]
+}
+
+model Signup {
+  id    Int     @id @default(autoincrement())
+  on_job Job @relation(fields: [jobId], references: [id])
+  for_user User @relation(fields: [userId], references: [id])
+  userId Int
+  jobId Int
+  completed Boolean @default(false)
 }
