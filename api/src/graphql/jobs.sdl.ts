@@ -7,6 +7,7 @@ export const schema = gql`
     managerId: Int!
     max_signups: Int!
     minimum_age: Int!
+    signups: [Signup!]!
   }
 
   type Query {
