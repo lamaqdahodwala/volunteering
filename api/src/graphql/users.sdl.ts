@@ -4,6 +4,7 @@ export const schema = gql`
     username: String!
     roles: String!
     manages: [Job]!
+    signups: [Signup!]!
   }
 
   type Query {
