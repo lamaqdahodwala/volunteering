@@ -34,7 +34,7 @@ model Job {
   minimum_age Int
   signups     Signup[]
   tags        Tag[]
-  time        BigInt
+  datetime        DateTime
 }
 
 model Signup {

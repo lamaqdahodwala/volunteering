@@ -8,6 +8,7 @@ import services from 'src/services/**/*.{js,ts}'
 import { getCurrentUser } from 'src/lib/auth'
 import { db } from 'src/lib/db'
 import { logger } from 'src/lib/logger'
+import { DateTimeResolver, DateTimeTypeDefinition } from 'graphql-scalars'
 
 export const handler = createGraphQLHandler({
   authDecoder,
@@ -16,6 +17,10 @@ export const handler = createGraphQLHandler({
   directives,
   sdls,
   services,
+  schemaOptions: {
+    typeDefs: [DateTimeTypeDefinition],
+    resolvers: {DateTime: DateTimeResolver}
+  },
   onException: () => {
     // Disconnect from your database with an unhandled exception.
     db.$disconnect()
