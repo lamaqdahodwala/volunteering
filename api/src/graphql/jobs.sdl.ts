@@ -8,7 +8,7 @@ export const schema = gql`
     max_signups: Int!
     minimum_age: Int!
     signups: [Signup!]!
-    date: Int!
+    datetime: DateTime!
   }
 
   type Query {
