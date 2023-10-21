@@ -15,10 +15,13 @@ export const schema = gql`
     jobDetail(id: Int!): Job! @requireAuth
   }
 
+  type Mutation {
+    createJob(input: CreateJobInput): Job! @requireAuth
+  }
+
   input CreateJobInput {
     title: String!
     description: String!
-    managerId: Int!
     max_signups: Int!
     minimum_age: Int!
   }
