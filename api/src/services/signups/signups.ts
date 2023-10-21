@@ -39,6 +39,35 @@ export const signupForJob:  MutationResolvers['signupForJob'] = async({ job_id }
   })
 }
 
+export const viewUpcomingJobs: QueryResolvers['viewUpcomingJobs'] = () => {
+  let user_id = context.currentUser.id
+  return db.signup.findMany({
+    where: {
+      for_user: {
+        id: user_id
+      },
+      on_job: {
+        datetime: {
+          gt: new Date( Date.now() )
+        }
+      }
+    },
+  })
+}
+
+
+export const viewVolunteerLog: QueryResolvers['viewVolunteerLog'] = () => {
+  let user_id = context.currentUser.id
+  return db.signup.findMany({
+    where: {
+      for_user: {
+        id: user_id
+      },
+      completed: true
+    },
+  })
+}
+
 export const removeSignupForJob: MutationResolvers['removeSignupForJob'] = async({ job_id }) => {
   let user_id = context.currentUser.id
 

@@ -10,6 +10,8 @@ export const schema = gql`
 
   type Query {
     signups: [Signup!]! @requireAuth
+    viewUpcomingJobs: [Signup!]! @requireAuth
+    viewVolunteerLog: [Signup!]! @requireAuth
   }
 
   type Mutation {
