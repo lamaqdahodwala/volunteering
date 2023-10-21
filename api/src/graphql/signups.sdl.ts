@@ -12,6 +12,11 @@ export const schema = gql`
     signups: [Signup!]! @requireAuth
   }
 
+  type Mutation {
+    signupForJob(job_id: Int!): Signup @requireAuth
+    removeSignupForJob(job_id: Int!): Signup!
+  }
+
   input CreateSignupInput {
     userId: Int!
     jobId: Int!
