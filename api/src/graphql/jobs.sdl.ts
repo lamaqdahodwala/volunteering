@@ -16,7 +16,7 @@ export const schema = gql`
   }
 
   type Mutation {
-    createJob(input: CreateJobInput): Job! @requireAuth
+    createJob(input: CreateJobInput): Job! @requireAuth(roles: "business")
   }
 
   input CreateJobInput {

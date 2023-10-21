@@ -1,4 +1,4 @@
-import type { QueryResolvers, JobRelationResolvers } from 'types/graphql'
+import type { QueryResolvers, JobRelationResolvers, MutationResolvers } from 'types/graphql'
 
 import { db } from 'src/lib/db'
 
@@ -39,6 +39,15 @@ export const jobDetail: QueryResolvers['jobDetail'] = ({ id }) => {
   return db.job.findUniqueOrThrow({
     where: {
       id: id
+    }
+  })
+}
+
+export const createJob: MutationResolvers['createJob'] = ({ input }) => {
+  return db.job.create({
+    data: {
+      ...input,
+      managerId: context.currentUser.id
     }
   })
 }
