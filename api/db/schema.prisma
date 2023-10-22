@@ -22,6 +22,8 @@ model User {
   resetTokenExpiresAt DateTime?
   signups             Signup[]
   watches             Tag[]
+  secret_phrase String?
+
 }
 
 model Job {

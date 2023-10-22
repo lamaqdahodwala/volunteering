@@ -1,6 +1,7 @@
 import type { MutationResolvers, QueryResolvers, SignupRelationResolvers } from 'types/graphql'
 
 import { db } from 'src/lib/db'
+import { ForbiddenError } from '@redwoodjs/graphql-server'
 
 export const signups: QueryResolvers['signups'] = () => {
   return db.signup.findMany()
@@ -68,6 +69,44 @@ export const viewVolunteerLog: QueryResolvers['viewVolunteerLog'] = () => {
   })
 }
 
+export const checkIntoJob: MutationResolvers['checkIntoJob'] = async({ job_id, user_id, secret_phrase}) => {
+  let job = await db.job.findUnique({
+    where: {
+      id: job_id
+    },
+    include: {
+      signups: {
+        include: {
+          for_user: true
+        }
+      }
+    }
+  })
+
+  let signed_up_user_ids = job.signups.map((val) => val.id)
+
+  if (!signed_up_user_ids.includes(user_id)) {
+    throw new ForbiddenError('This user has not signed up for this job')
+  }
+
+  let user_index = signed_up_user_ids.indexOf(user_id)
+  let signup_for_user = job.signups[user_index]
+  let user = signup_for_user.for_user
+
+  if (user.secret_phrase !== secret_phrase) {
+    throw new ForbiddenError("Wrong phrase")
+  }
+
+  await db.signup.update({
+    where: {
+      id: signup_for_user.id
+    },
+    data: {
+      completed: true
+    }
+  })
+
+}
 export const removeSignupForJob: MutationResolvers['removeSignupForJob'] = async({ job_id }) => {
   let user_id = context.currentUser.id
 
