@@ -97,7 +97,7 @@ export const checkIntoJob: MutationResolvers['checkIntoJob'] = async({ job_id, u
     throw new ForbiddenError("Wrong phrase")
   }
 
-  await db.signup.update({
+  return await db.signup.update({
     where: {
       id: signup_for_user.id
     },
