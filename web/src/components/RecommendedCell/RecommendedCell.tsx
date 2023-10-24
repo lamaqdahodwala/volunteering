@@ -5,8 +5,8 @@ import type {
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
 export const QUERY = gql`
-  query FindRecommendedQuery($id: Int!) {
-    recommended: recommended(id: $id) {
+  query FindRecommendedQuery {
+    recommended: recommended_jobs {
       id
     }
   }
