@@ -25,5 +25,6 @@ export const Failure = ({
 export const Success = ({
   recommended,
 }: CellSuccessProps<FindRecommendedQuery, FindRecommendedQueryVariables>) => {
-  return <div>{JSON.stringify(recommended)}</div>
+  return <>
+  </>
 }
