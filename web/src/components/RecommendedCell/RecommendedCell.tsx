@@ -8,11 +8,18 @@ export const QUERY = gql`
   query FindRecommendedQuery {
     recommended: recommended_jobs {
       id
-    }
+      title
+      manager {
+        username
+      }
+      max_signups
+
+   }
   }
 `
 
 export const Loading = () => <div>Loading...</div>
+
 
 export const Empty = () => <div>Empty</div>
 
@@ -25,6 +32,10 @@ export const Failure = ({
 export const Success = ({
   recommended,
 }: CellSuccessProps<FindRecommendedQuery, FindRecommendedQueryVariables>) => {
-  return <>
-  </>
+  return <div>
+    {recommended.map((val, index) =>
+      <p key={index}>{val.id}</p>
+
+    )}
+  </div>
 }
