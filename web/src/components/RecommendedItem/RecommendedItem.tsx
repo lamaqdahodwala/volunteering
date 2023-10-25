@@ -13,17 +13,24 @@ const RecommendedItem: FC<RecommendedItemProps> = (props) => {
   return (
     <div className="bg-base-300 rounded-lg collapse">
       <input type="checkbox"/>
-      <p className="text-2xl font-bold collapse-title">{props.title}</p>
+      <div className="collapse-title flex flex-row justify-between">
+        <p className="text-2xl font-bold">{props.title}</p>
+        <p>Click for more info</p>
+      </div>
       <div className="collapse-content">
-        <div className="grid grid-cols-3 gap-3">
+        <div className="flex w-full flex-row">
 
-        <div>
-          <p>{props.description}</p>
+        <div className="flex-grow">
+          <p className="font-bold">Summary</p>
+          <p className="w-96">{props.description}</p>
         </div>
-        <div>
-          <h1>Quick stats</h1>
+        <p className="divider divider-horizontal"></p>
+        <div className="flex-grow">
+          <h1 className="font-bold">Quick stats</h1>
+          <p>{props.max_signups} spots in total</p>
         </div>
-        <div className="grid place-items-center">
+        <p className="divider divider-horizontal"></p>
+        <div className="grid place-items-center flex-grow">
 
           <button className="btn btn-success btn-outline w-full">Sign up</button>
         </div>
