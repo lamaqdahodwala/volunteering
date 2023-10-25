@@ -22,4 +22,14 @@ export default meta
 
 type Story = StoryObj<typeof RecommendedItem>
 
-export const Primary: Story = {}
+export const Primary: Story = {
+  args: {
+    id: 1,
+    title: "My job",
+    manager: {
+      username: "JFK High school"
+    },
+    max_signups: 100,
+    description: "This is a great place to volunteer at because you can get volunteer hours"
+  }
+}
