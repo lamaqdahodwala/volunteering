@@ -22,4 +22,19 @@ export default meta
 
 type Story = StoryObj<typeof Tag>
 
-export const Primary: Story = {}
+export const Primary: Story = {
+  args: {
+    name: "Health",
+    description: "Help people be healthy",
+    id: 1
+  }
+}
+
+export const LongDescription: Story = {
+
+  args: {
+    name: "health",
+    description: "This is a really long description so i don't know if i should cut this off with a dot dot dot or not",
+    id: 1
+  }
+}

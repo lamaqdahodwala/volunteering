@@ -9,6 +9,7 @@ export const schema = gql`
 
   type Query {
     myWatchedTags: [Tag!]! @requireAuth
+    doIWatchTag(id: Int): Boolean @requireAuth
   }
 
   type Mutation {

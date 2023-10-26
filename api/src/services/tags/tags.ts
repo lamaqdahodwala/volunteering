@@ -19,6 +19,29 @@ export const myWatchedTags: QueryResolvers['myWatchedTags'] = async() => {
 
 
 
+export const doIWatchTag: QueryResolvers['doIWatchTag'] = async({ id }) => {
+  let user_id = context.currentUser.id
+
+  let user = await db.user.findUnique({
+    where: {
+      id: user_id
+    },
+    include: {
+      watches: {
+        select: {
+          id: true,
+          name: true
+        }
+      }
+    }
+  })
+
+  const INITIAL_VALUE = 0
+  let watched_tags = user.watches.reduce((acc, current) => acc + Number(current.id === id), INITIAL_VALUE)
+
+  return Boolean(watched_tags)
+
+}
 
 export const unwatchTag: MutationResolvers['unwatchTag'] = ({ id }) => {
   let user_id = context.currentUser.id

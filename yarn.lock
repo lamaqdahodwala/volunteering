@@ -2530,7 +2530,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@floating-ui/dom@npm:^1.5.1":
+"@floating-ui/dom@npm:^1.0.0, @floating-ui/dom@npm:^1.5.1":
   version: 1.5.3
   resolution: "@floating-ui/dom@npm:1.5.3"
   dependencies:
@@ -10444,6 +10444,13 @@ __metadata:
     isobject: ^3.0.0
     static-extend: ^0.1.1
   checksum: d44f4afc7a3e48dba4c2d3fada5f781a1adeeff371b875c3b578bc33815c6c29d5d06483c2abfd43a32d35b104b27b67bfa39c2e8a422fa858068bd756cfbd42
+  languageName: node
+  linkType: hard
+
+"classnames@npm:^2.3.0":
+  version: 2.3.2
+  resolution: "classnames@npm:2.3.2"
+  checksum: cd50ead57b4f97436aaa9f9885c6926323efc7c2bea8e3d4eb10e4e972aa6a1cfca1c7a0e06f8a199ca7498d4339e30bb6002e589e61c9f21248cbf3e8b0b18d
   languageName: node
   linkType: hard
 
@@ -20420,6 +20427,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-tooltip@npm:^5.21.6":
+  version: 5.21.6
+  resolution: "react-tooltip@npm:5.21.6"
+  dependencies:
+    "@floating-ui/dom": ^1.0.0
+    classnames: ^2.3.0
+  peerDependencies:
+    react: ">=16.14.0"
+    react-dom: ">=16.14.0"
+  checksum: 2161937cccc882d131b34da358be7eaf0b8fd9def305c88f8db73124f15330a917329179e94478f081d5f0b62c59ba405e06f959941fbf35e9b5e6b128ec152b
+  languageName: node
+  linkType: hard
+
 "react@npm:18.2.0":
   version: 18.2.0
   resolution: "react@npm:18.2.0"
@@ -23994,6 +24014,7 @@ __metadata:
     prop-types: 15.8.1
     react: 18.2.0
     react-dom: 18.2.0
+    react-tooltip: ^5.21.6
     tailwindcss: ^3.3.3
   languageName: unknown
   linkType: soft
