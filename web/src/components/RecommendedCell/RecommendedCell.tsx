@@ -3,12 +3,14 @@ import type {
   FindRecommendedQueryVariables,
 } from 'types/graphql'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
+import RecommendedItem from '../RecommendedItem/RecommendedItem'
 
 export const QUERY = gql`
   query FindRecommendedQuery {
     recommended: recommended_jobs {
       id
       title
+      description
       manager {
         username
       }
@@ -32,9 +34,9 @@ export const Failure = ({
 export const Success = ({
   recommended,
 }: CellSuccessProps<FindRecommendedQuery, FindRecommendedQueryVariables>) => {
-  return <div>
+  return <div className="space-y-4">
     {recommended.map((val, index) =>
-      <p key={index}>{val.id}</p>
+      <RecommendedItem {...val} key={index}></RecommendedItem>
 
     )}
   </div>
