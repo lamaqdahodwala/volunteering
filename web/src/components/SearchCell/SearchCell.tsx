@@ -1,13 +1,26 @@
 import type { FindSearchQuery, FindSearchQueryVariables } from 'types/graphql'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
+import RecommendedItem from '../RecommendedItem/RecommendedItem'
 
 export const QUERY = gql`
-  query FindSearchQuery($id: Int!) {
-    search: search(id: $id) {
+  query FindSearchQuery($query: String!) {
+    search: search(query: $query) {
+      title
+      manager {
+        username
+      }
+
+      max_signups
       id
+      description
     }
   }
 `
+export const beforeQuery = ({ query }) => {
+  return {
+    variables: { query }
+  }
+}
 
 export const Loading = () => <div>Loading...</div>
 
@@ -22,5 +35,7 @@ export const Failure = ({
 export const Success = ({
   search,
 }: CellSuccessProps<FindSearchQuery, FindSearchQueryVariables>) => {
-  return <div>{JSON.stringify(search)}</div>
+  return (
+    {search.map((val) => <RecommendedItem {...val}></RecommendedItem> )}
+  )
 }
