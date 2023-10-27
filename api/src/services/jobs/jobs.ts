@@ -2,6 +2,35 @@ import type { QueryResolvers, JobRelationResolvers, MutationResolvers } from 'ty
 
 import { db } from 'src/lib/db'
 
+export const search: QueryResolvers['search'] = async({ query }) => {
+  let regex = /\[(.*?)\]/gm
+
+  let matches = query.match(regex)
+
+  let tag_matches = matches.map((val) => val.slice(1, -1))
+
+  matches.forEach((val) => {
+    query = query.replace(val, "").trim()
+  })
+
+  let text_query = query
+
+  let params:any = {}
+
+  if ( tag_matches ) {
+    params.where.tags.some.name.in = tag_matches
+  }
+
+  if (text_query) {
+    params.where.title.contains = text_query
+  }
+  let jobs = await db.job.findMany({
+    ...params
+  })
+
+  return jobs
+
+}
 
 export const recommended_jobs: QueryResolvers['recommended_jobs'] = async () => {
   let user_id = context.currentUser.id
