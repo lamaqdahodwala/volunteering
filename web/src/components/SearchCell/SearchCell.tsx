@@ -32,10 +32,8 @@ export const Failure = ({
   <div style={{ color: 'red' }}>Error: {error?.message}</div>
 )
 
-export const Success = ({
-  search,
-}: CellSuccessProps<FindSearchQuery, FindSearchQueryVariables>) => {
+export const Success = ({ search }: CellSuccessProps<FindSearchQuery, FindSearchQueryVariables>) => {
   return (
-    {search.map((val) => <RecommendedItem {...val}></RecommendedItem> )}
+    <div>{search.map((val, index) => <RecommendedItem {...val} key={index}></RecommendedItem> )}</div>
   )
 }
