@@ -5,8 +5,8 @@ import type {
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
 export const QUERY = gql`
-  query FindScheduleQuery($id: Int!) {
-    schedule: schedule(id: $id) {
+  query FindScheduleQuery {
+    schedule: viewUpcomingJobs {
       id
     }
   }
@@ -25,5 +25,5 @@ export const Failure = ({
 export const Success = ({
   schedule,
 }: CellSuccessProps<FindScheduleQuery, FindScheduleQueryVariables>) => {
-  return <div>{JSON.stringify(schedule)}</div>
+
 }

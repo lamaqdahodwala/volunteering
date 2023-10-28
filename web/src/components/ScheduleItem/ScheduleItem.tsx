@@ -1,9 +1,24 @@
-const ScheduleItem = () => {
+import { FC } from "react"
+
+interface ScheduleItemProps {
+  on_job: {
+    title: string,
+    datetime: Date,
+    manager: {
+      username: string
+    }
+  }
+}
+const ScheduleItem: FC<ScheduleItemProps> = (props) => {
   return (
-    <div>
-      <h2>{'ScheduleItem'}</h2>
-      <p>{'Find me in ./web/src/components/ScheduleItem/ScheduleItem.tsx'}</p>
-    </div>
+    <>
+      <div className="card">
+        <div className="card-title">{ props.on_job.title }</div>
+        <div className="card-body">
+          { props.on_job.datetime.toString() }
+        </div>
+      </div>
+    </>
   )
 }
 

@@ -50,6 +50,15 @@ export const recommended_jobs: QueryResolvers['recommended_jobs'] = async () => 
   })
 
   let followed_tag_ids = user.watches.map((val) => val.id)
+
+  if ( followed_tag_ids.length === 0 ){
+    return db.job.findMany({
+      take: 10,
+      orderBy: {
+        id: "desc"
+      }
+    })
+  }
   return db.job.findMany({
     where: {
       tags: {
@@ -59,7 +68,8 @@ export const recommended_jobs: QueryResolvers['recommended_jobs'] = async () => 
           }
         }
       }
-    }
+    },
+    take: 10
   })
 }
 
