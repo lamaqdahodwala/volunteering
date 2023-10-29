@@ -47,5 +47,6 @@ export const Success = ({
     <h1 className="text-2xl font-bold">{jobDetail.title}</h1>
     <div className="flex flex-row gap-3">{jobDetail.tags.map((val, index) => <div><Tag {...val} key={index}></Tag></div> )}</div>
     <div className="divider"></div>
+    <p>{jobDetail.description}</p>
   </div>
 }
