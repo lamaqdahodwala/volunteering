@@ -96,4 +96,7 @@ export const Job: JobRelationResolvers = {
   manager: (_obj, { root }) => {
     return db.job.findUnique({ where: { id: root?.id } }).manager()
   },
+  tags: (_obj, {root}) => {
+    return db.job.findUnique({where: {id: root?.id}}).tags()
+  }
 }
