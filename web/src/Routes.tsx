@@ -14,7 +14,7 @@ import { useAuth } from './auth'
 const Routes = () => {
   return (
     <Router useAuth={useAuth}>
-      <Route path="/job-detail" page={JobDetailPage} name="jobDetail" />
+      <Route path="/job/{id}" page={JobDetailPage} name="jobDetail" />
       <Private unauthenticated='login' >
         <Route path="/" page={HomePage} name="home" />
       </Private>
