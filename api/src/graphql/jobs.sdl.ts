@@ -10,6 +10,7 @@ export const schema = gql`
     signups: [Signup!]!
     datetime: DateTime!
     tags: [Tag!]!
+    duration: Int!
   }
 
   type Query {
