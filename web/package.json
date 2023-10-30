@@ -17,6 +17,7 @@
     "@redwoodjs/web": "6.3.2",
     "@tabler/icons-react": "^2.39.0",
     "daisyui": "^3.9.3",
+    "luxon": "^3.4.3",
     "prop-types": "15.8.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
