@@ -37,6 +37,7 @@ model Job {
   signups     Signup[]
   tags        Tag[]
   datetime        DateTime
+  duration Int @default(1)
 }
 
 model Signup {
