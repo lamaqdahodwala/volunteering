@@ -7368,6 +7368,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/luxon@npm:^3.3.3":
+  version: 3.3.3
+  resolution: "@types/luxon@npm:3.3.3"
+  checksum: 169ce8eb8860f3ad9ef146c2c7a2d9bc09775b8af93fb346f1222e67e4f98559201cf38ed6d8dc9a72d9535b1cf9a46415cf95591e56d2d72101babce2996de3
+  languageName: node
+  linkType: hard
+
 "@types/mdx@npm:^2.0.0":
   version: 2.0.9
   resolution: "@types/mdx@npm:2.0.9"
@@ -24041,6 +24048,7 @@ __metadata:
     "@redwoodjs/vite": 6.3.2
     "@redwoodjs/web": 6.3.2
     "@tabler/icons-react": ^2.39.0
+    "@types/luxon": ^3.3.3
     "@types/react": 18.2.14
     "@types/react-dom": 18.2.6
     autoprefixer: ^10.4.16

@@ -1,14 +1,30 @@
+import { DateTime, Interval } from 'luxon'
+
 import type {
   FindSchedulerQuery,
   FindSchedulerQueryVariables,
 } from 'types/graphql'
-import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
+import {
+  type CellSuccessProps,
+  type CellFailureProps,
+  useMutation,
+} from '@redwoodjs/web'
+import { useEffect } from 'react'
 
 export const QUERY = gql`
-  query FindSchedulerQuery($id: Int!) {
-    scheduler: scheduler(id: $id) {
+  query FindSchedulerQuery($job_id: Int!) {
+    scheduler: viewUpcomingJobs {
       id
+      on_job {
+        datetime
+        title
+        duration
+        manager {
+          username
+        }
+      }
     }
+    amISignedUpFor(job_id: $job_id)
   }
 `
 
@@ -22,8 +38,120 @@ export const Failure = ({
   <div style={{ color: 'red' }}>Error: {error?.message}</div>
 )
 
-export const Success = ({
-  scheduler,
-}: CellSuccessProps<FindSchedulerQuery, FindSchedulerQueryVariables>) => {
-  return <div>{JSON.stringify(scheduler)}</div>
+export const beforeQuery = (props) => {
+  return {
+    variables: {
+      job_id: props.job_id,
+    },
+  }
+}
+
+const SIGN_UP_MUTATION = gql`
+  mutation SignUpForJobMutation($id: Int!) {
+    signupForJob(job_id: $id) {
+      id
+      on_job {
+        title
+      }
+    }
+  }
+`
+
+const UNSIGN_UP_MUTATION = gql`
+mutation UnSigupUpForJobMutation($id: Int!) {
+  removeSignupForJob(job_id: $id) {
+    id
+  }
+}
+`
+
+export const Success = (
+  {
+    scheduler,
+  }: CellSuccessProps<FindSchedulerQuery, FindSchedulerQueryVariables>,
+  { job }
+) => {
+  let isThereTime = checkForConflictsWithPreviousOrNextJobsAndCheckBreak()
+
+  let [signupFunction, { loading, error, data }] = useMutation(
+    SIGN_UP_MUTATION,
+    {
+      refetchQueries: [QUERY],
+    }
+  )
+let [unsignupFunction, { loading, error, data }] = useMutation(
+    UNSIGN_UP_MUTATION,
+    {
+      refetchQueries: [QUERY],
+    }
+  )
+  return (
+    <div className="card bg-base-300">
+      <div className="card-body">
+        <h1 className="card-title">Scheduler</h1>
+        <p>{isThereTime ? 'There is enough time' : 'Not enough time'}</p>
+        {scheduler.amISignedUpFor ?
+        <button className="btn btn-error  flex-grow" onClick={() => unsignupFunction()}>Remove signup</button>: <button className="btn btn-success  flex-grow" onClick={() => signupFunction()}>Sign up</button>}
+      </div>
+    </div>
+  )
+
+  function checkForConflictsWithPreviousOrNextJobsAndCheckBreak() {
+    let isThereTime: boolean = true
+
+    let upcoming_jobs: Array<any> = scheduler.viewUpcomingJobs.map((val) => val.on_job)
+    upcoming_jobs.push(job)
+
+    upcoming_jobs.sort((a, b) => {
+      if (a < b) {
+        return -1
+      }
+      if (a > b) {
+        return 1
+      }
+      return 0
+    })
+
+    let index_of_this_job = upcoming_jobs.indexOf(job)
+    let comes_before = upcoming_jobs.slice(0, index_of_this_job)
+    let comes_after = upcoming_jobs.slice(index_of_this_job + 1)
+
+    let this_job_start_time = DateTime.fromISO(job.datetime)
+    let this_job_end_time = this_job_start_time.plus({ hours: job.duration })
+
+    comes_before.forEach((val) => {
+      let start_time = DateTime.fromISO(val.datetime)
+      let end_time = DateTime.fromISO(val.datetime).plus({
+        hours: val.duration,
+      })
+      let interval = Interval.fromDateTimes(start_time, end_time)
+
+      if (!interval.contains(this_job_start_time)) {
+        isThereTime = false
+        return
+      }
+
+      let diff = end_time.diff(this_job_start_time, ['hours']).toObject()
+      if (diff.hours <= 1) {
+        isThereTime = false
+        return
+      }
+    })
+
+    if (isThereTime) return isThereTime
+
+    comes_after.forEach((val) => {
+      let start_time = DateTime.fromISO(val.datetime)
+      let end_time = DateTime.fromISO(val.datetime).plus({
+        hours: val.duration,
+      })
+      let interval = Interval.fromDateTimes(start_time, end_time)
+
+      if (!interval.contains(this_job_end_time)) {
+        isThereTime = false
+        return
+      }
+    })
+    return isThereTime
+  }
 }
