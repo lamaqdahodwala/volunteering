@@ -12,6 +12,7 @@ export const schema = gql`
     signups: [Signup!]! @requireAuth
     viewUpcomingJobs: [Signup!]! @requireAuth
     viewVolunteerLog: [Signup!]! @requireAuth
+    amISignedUpFor(job_id: Int!): Boolean @requireAuth
   }
 
   type Mutation {

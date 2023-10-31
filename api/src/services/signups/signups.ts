@@ -1,4 +1,8 @@
-import type { MutationResolvers, QueryResolvers, SignupRelationResolvers } from 'types/graphql'
+import type {
+  MutationResolvers,
+  QueryResolvers,
+  SignupRelationResolvers,
+} from 'types/graphql'
 
 import { db } from 'src/lib/db'
 import { ForbiddenError } from '@redwoodjs/graphql-server'
@@ -7,36 +11,64 @@ export const signups: QueryResolvers['signups'] = () => {
   return db.signup.findMany()
 }
 
-export const signupForJob:  MutationResolvers['signupForJob'] = async({ job_id }) => {
+export const amISignedUpFor: QueryResolvers['amISignedUpFor'] = async ({
+  job_id,
+}) => {
+  let user_id = context.currentUser.id
+  let job = await db.job.findUnique({
+    where: {
+      id: job_id,
+    },
+    include: {
+      signups: {
+        include: {
+          for_user: {
+            select: {
+              id: true,
+              username: true,
+            },
+          },
+        },
+      },
+    },
+  })
+
+  let signed_up_user_ids = job.signups.map((val) => val.for_user.id)
+  if (signed_up_user_ids.includes(user_id)) return true
+  return false
+}
+export const signupForJob: MutationResolvers['signupForJob'] = async ({
+  job_id,
+}) => {
   let job = await db.job.findUniqueOrThrow({
     where: {
-      id: job_id
+      id: job_id,
     },
     include: {
       _count: {
         select: {
-          signups: true
-        }
-      }
-    }
+          signups: true,
+        },
+      },
+    },
   })
 
-  if (job._count.signups + 1 > job.max_signups){
+  if (job._count.signups + 1 > job.max_signups) {
     return null
   }
   return db.signup.create({
     data: {
       for_user: {
         connect: {
-          id: context.currentUser.id
-        }
+          id: context.currentUser.id,
+        },
       },
       on_job: {
         connect: {
-          id: job_id
-        }
-      }
-    }
+          id: job_id,
+        },
+      },
+    },
   })
 }
 
@@ -45,42 +77,45 @@ export const viewUpcomingJobs: QueryResolvers['viewUpcomingJobs'] = () => {
   return db.signup.findMany({
     where: {
       for_user: {
-        id: user_id
+        id: user_id,
       },
       on_job: {
         datetime: {
-          gt: new Date( Date.now() )
-        }
-      }
+          gt: new Date(Date.now()),
+        },
+      },
     },
   })
 }
-
 
 export const viewVolunteerLog: QueryResolvers['viewVolunteerLog'] = () => {
   let user_id = context.currentUser.id
   return db.signup.findMany({
     where: {
       for_user: {
-        id: user_id
+        id: user_id,
       },
-      completed: true
+      completed: true,
     },
   })
 }
 
-export const checkIntoJob: MutationResolvers['checkIntoJob'] = async({ job_id, user_id, secret_phrase}) => {
+export const checkIntoJob: MutationResolvers['checkIntoJob'] = async ({
+  job_id,
+  user_id,
+  secret_phrase,
+}) => {
   let job = await db.job.findUnique({
     where: {
-      id: job_id
+      id: job_id,
     },
     include: {
       signups: {
         include: {
-          for_user: true
-        }
-      }
-    }
+          for_user: true,
+        },
+      },
+    },
   })
 
   let signed_up_user_ids = job.signups.map((val) => val.id)
@@ -94,40 +129,39 @@ export const checkIntoJob: MutationResolvers['checkIntoJob'] = async({ job_id, u
   let user = signup_for_user.for_user
 
   if (user.secret_phrase !== secret_phrase) {
-    throw new ForbiddenError("Wrong phrase")
+    throw new ForbiddenError('Wrong phrase')
   }
 
   return await db.signup.update({
     where: {
-      id: signup_for_user.id
+      id: signup_for_user.id,
     },
     data: {
-      completed: true
-    }
+      completed: true,
+    },
   })
-
 }
-export const removeSignupForJob: MutationResolvers['removeSignupForJob'] = async({ job_id }) => {
-  let user_id = context.currentUser.id
+export const removeSignupForJob: MutationResolvers['removeSignupForJob'] =
+  async ({ job_id }) => {
+    let user_id = context.currentUser.id
 
-
-  let signup = await db.signup.findUniqueOrThrow({
-    where: {
-      on_job: {
-        id: job_id
+    let signup = await db.signup.findUniqueOrThrow({
+      where: {
+        on_job: {
+          id: job_id,
+        },
+        for_user: {
+          id: user_id,
+        },
       },
-      for_user: {
-        id: user_id
-      }
-    }
-  })
+    })
 
-  return db.signup.delete({
-    where: {
-      id: signup.id
-    }
-  })
-}
+    return db.signup.delete({
+      where: {
+        id: signup.id,
+      },
+    })
+  }
 export const Signup: SignupRelationResolvers = {
   on_job: (_obj, { root }) => {
     return db.signup.findUnique({ where: { id: root?.id } }).on_job()
