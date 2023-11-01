@@ -11,6 +11,7 @@ export const schema = gql`
     myWatchedTags: [Tag!]! @requireAuth
     doIWatchTag(id: Int!): Boolean @requireAuth
     getJobsByTag(tag_id: Int!): [Job!]! @skipAuth
+    tagInfo(tag_id: Int!): Tag! @skipAuth
   }
 
   type Mutation {

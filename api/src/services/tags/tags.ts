@@ -70,6 +70,15 @@ export const unwatchTag: MutationResolvers['unwatchTag'] = ({ id }) => {
   })
 }
 
+export const tagInfo:  QueryResolvers['tagInfo'] = ({tag_id}) => {
+
+  return db.tag.findUnique({
+    where: {
+      id: tag_id
+    }
+  })
+
+}
 
 export const watchTag: MutationResolvers['watchTag'] = ({ id }) => {
   let user_id = context.currentUser.id

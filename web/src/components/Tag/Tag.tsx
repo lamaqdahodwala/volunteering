@@ -1,7 +1,7 @@
-import { Link } from "@redwoodjs/router"
-import { useMutation, useQuery } from "@redwoodjs/web"
-import { FC, useRef, useState } from "react"
-import { Tooltip } from "react-tooltip"
+import { Link } from '@redwoodjs/router'
+import { useMutation, useQuery } from '@redwoodjs/web'
+import { FC, useRef, useState } from 'react'
+import { Tooltip } from 'react-tooltip'
 
 interface TagProps {
   name: string
@@ -23,7 +23,6 @@ const WATCH_TAG_MUTATION = gql`
   }
 `
 const UNWATCH_TAG_MUTATION = gql`
-
   mutation UnwatchTagMutation($id: Int!) {
     unwatchTag(id: $id) {
       name
@@ -31,54 +30,71 @@ const UNWATCH_TAG_MUTATION = gql`
       description
     }
   }
-
 `
 
 const Tag: FC<TagProps> = (props) => {
-  const {loading, error, data} = useQuery(CHECK_IF_IM_WATCHING_TAG, {
-    variables: {id: props.id}
+  const { loading, error, data } = useQuery(CHECK_IF_IM_WATCHING_TAG, {
+    variables: { id: props.id },
   })
 
   const [watchTagFunction] = useMutation(WATCH_TAG_MUTATION, {
-    refetchQueries: [ CHECK_IF_IM_WATCHING_TAG ]
+    refetchQueries: [CHECK_IF_IM_WATCHING_TAG],
   })
-const [ unwatchTagFunction ] = useMutation(UNWATCH_TAG_MUTATION, {
-  refetchQueries: [CHECK_IF_IM_WATCHING_TAG]
+  const [unwatchTagFunction] = useMutation(UNWATCH_TAG_MUTATION, {
+    refetchQueries: [CHECK_IF_IM_WATCHING_TAG],
   })
 
   function toggleWatchState() {
     if (data.doIWatchTag === true) {
-      unwatchTagFunction({ variables: {id: props.id}})
+      unwatchTagFunction({ variables: { id: props.id } })
       return
     }
 
-    watchTagFunction({ variables: {id: props.id}})
+    watchTagFunction({ variables: { id: props.id } })
     return
-
   }
 
   let random_number = Math.floor(Math.random() * 1000)
   let first_letter = props.name.charAt(0)
 
-  let id_name = useRef( `${first_letter}${random_number}` )
-
-
+  let id_name = useRef(`${first_letter}${random_number}`)
 
   return (
     <div>
-
-      <div id={id_name.current} className="badge badge-info" >
-      {props.name}
+      <div id={id_name.current} className="badge badge-info">
+        {props.name}
       </div>
 
       <Tooltip anchorSelect={`#${id_name.current}`} clickable>
-<div className="flex flex-col gap-2">
-      <p className="w-64">{props.description.length >= 100 ? props.description.substring(0, 100) + "..." : props.description}</p>
-      <Link to="/" className="text-sm uppercase text-info link">More</Link>
+        <div className="flex flex-col gap-2">
+          <p className="w-64">
+            {props.description.length >= 100
+              ? props.description.substring(0, 100) + '...'
+              : props.description}
+          </p>
+          <Link
+            to={`/tag/${props.id}`}
+            className="link text-sm uppercase text-info"
+          >
+            More
+          </Link>
 
-      {data?.doIWatchTag === true && !loading ? (
-      <button className="btn btn-error" onClick={() => toggleWatchState()}>Unwatch Tag</button>
-      ): ( <button className="btn btn-success" onClick={() => toggleWatchState()}>Watch Tag</button> )}</div>
+          {data?.doIWatchTag === true && !loading ? (
+            <button
+              className="btn btn-error"
+              onClick={() => toggleWatchState()}
+            >
+              Unwatch Tag
+            </button>
+          ) : (
+            <button
+              className="btn btn-success"
+              onClick={() => toggleWatchState()}
+            >
+              Watch Tag
+            </button>
+          )}
+        </div>
       </Tooltip>
     </div>
   )
