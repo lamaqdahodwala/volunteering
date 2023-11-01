@@ -1,6 +1,6 @@
 import { Link } from "@redwoodjs/router"
 import { useMutation, useQuery } from "@redwoodjs/web"
-import { FC, useState } from "react"
+import { FC, useRef, useState } from "react"
 import { Tooltip } from "react-tooltip"
 
 interface TagProps {
@@ -57,14 +57,21 @@ const [ unwatchTagFunction ] = useMutation(UNWATCH_TAG_MUTATION, {
 
   }
 
+  let random_number = Math.floor(Math.random() * 1000)
+  let first_letter = props.name.charAt(0)
+
+  let id_name = useRef( `${first_letter}${random_number}` )
+
+
+
   return (
     <div>
 
-      <div id={String(props.name).toLowerCase()} className="badge badge-info" >
+      <div id={id_name.current} className="badge badge-info" >
       {props.name}
       </div>
 
-      <Tooltip anchorSelect={"#" + String(props.name).toLowerCase()} clickable>
+      <Tooltip anchorSelect={`#${id_name.current}`} clickable>
 <div className="flex flex-col gap-2">
       <p className="w-64">{props.description.length >= 100 ? props.description.substring(0, 100) + "..." : props.description}</p>
       <Link to="home" className="text-sm uppercase text-info link">More</Link>

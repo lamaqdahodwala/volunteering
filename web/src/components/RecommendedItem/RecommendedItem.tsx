@@ -32,7 +32,7 @@ const RecommendedItem: FC<RecommendedItemProps> = (props) => {
         <p className="divider divider-horizontal"></p>
         <div className="grid place-items-center flex-grow">
 
-          <button className="btn btn-success btn-outline w-full">Sign up</button>
+          <a href={`/job/${props.id}`} className="btn btn-success btn-outline w-full">Sign up</a>
         </div>
         </div>
       </div>

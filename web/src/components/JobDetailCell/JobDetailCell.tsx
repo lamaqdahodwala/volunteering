@@ -1,3 +1,4 @@
+import SchedulerCell from 'src/components/SchedulerCell/SchedulerCell'
 import type {
   FindJobDetailQuery,
   FindJobDetailQueryVariables,
@@ -45,17 +46,12 @@ export const Success = ({
 }: CellSuccessProps<FindJobDetailQuery, FindJobDetailQueryVariables>) => {
   return <div>
     <h1 className="text-2xl font-bold">{jobDetail.title}</h1>
-    <div className="flex flex-row gap-3">{jobDetail.tags.map((val, index) => <div><Tag {...val} key={index}></Tag></div> )}</div>
+    <div className="flex flex-row gap-3">{jobDetail.tags.map((val, index) => <div key={index}><Tag {...val} key={index}></Tag></div> )}</div>
     <div className="divider"></div>
 
     <div className="flex flex-row justify-between m-3">
       <p className="flex-grow">{jobDetail.description}</p>
-      <div className="card bg-base-300">
-        <div className="card-body"><h1 className="card-title">Scheduler</h1>
-        <p>You can attend this in time</p>
-        <button className="btn btn-success  flex-grow">Sign up</button></div>
-      </div>
-
+      <SchedulerCell job_id={jobDetail.id}></SchedulerCell>
     </div>
   </div>
 }

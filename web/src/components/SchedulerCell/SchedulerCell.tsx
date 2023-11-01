@@ -25,6 +25,15 @@ export const QUERY = gql`
       }
     }
     amISignedUpFor(job_id: $job_id)
+    job: jobDetail(id: $job_id) {
+      id
+      datetime
+      title
+      description
+      manager {
+        username
+      }
+    }
   }
 `
 
@@ -41,7 +50,7 @@ export const Failure = ({
 export const beforeQuery = (props) => {
   return {
     variables: {
-      job_id: props.job_id,
+      job_id: Number( props.job_id )
     },
   }
 }
@@ -67,19 +76,17 @@ mutation UnSigupUpForJobMutation($id: Int!) {
 
 export const Success = (
   {
-    scheduler,
-  }: CellSuccessProps<FindSchedulerQuery, FindSchedulerQueryVariables>,
-  { job }
+    scheduler, amISignedUpFor, job}: CellSuccessProps<FindSchedulerQuery, FindSchedulerQueryVariables>,
 ) => {
   let isThereTime = checkForConflictsWithPreviousOrNextJobsAndCheckBreak()
 
-  let [signupFunction, { loading, error, data }] = useMutation(
+  let [signupFunction] = useMutation(
     SIGN_UP_MUTATION,
     {
       refetchQueries: [QUERY],
     }
   )
-let [unsignupFunction, { loading, error, data }] = useMutation(
+let [unsignupFunction] = useMutation(
     UNSIGN_UP_MUTATION,
     {
       refetchQueries: [QUERY],
@@ -90,8 +97,9 @@ let [unsignupFunction, { loading, error, data }] = useMutation(
       <div className="card-body">
         <h1 className="card-title">Scheduler</h1>
         <p>{isThereTime ? 'There is enough time' : 'Not enough time'}</p>
-        {scheduler.amISignedUpFor ?
-        <button className="btn btn-error  flex-grow" onClick={() => unsignupFunction()}>Remove signup</button>: <button className="btn btn-success  flex-grow" onClick={() => signupFunction()}>Sign up</button>}
+        { amISignedUpFor ?
+        <button className="btn btn-error  flex-grow" onClick={() => unsignupFunction({ variables: {id: job.id}})}>Remove signup</button>
+        : <button className="btn btn-success  flex-grow" onClick={() => signupFunction({variables: {id: job.id}})}>Sign up</button>}
       </div>
     </div>
   )
@@ -99,7 +107,7 @@ let [unsignupFunction, { loading, error, data }] = useMutation(
   function checkForConflictsWithPreviousOrNextJobsAndCheckBreak() {
     let isThereTime: boolean = true
 
-    let upcoming_jobs: Array<any> = scheduler.viewUpcomingJobs.map((val) => val.on_job)
+    let upcoming_jobs: Array<any> = scheduler.map((val) => val.on_job)
     upcoming_jobs.push(job)
 
     upcoming_jobs.sort((a, b) => {
@@ -122,7 +130,7 @@ let [unsignupFunction, { loading, error, data }] = useMutation(
     comes_before.forEach((val) => {
       let start_time = DateTime.fromISO(val.datetime)
       let end_time = DateTime.fromISO(val.datetime).plus({
-        hours: val.duration,
+        hours: val.duration
       })
       let interval = Interval.fromDateTimes(start_time, end_time)
 

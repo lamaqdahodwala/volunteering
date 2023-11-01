@@ -5,7 +5,7 @@ import type {
 } from 'types/graphql'
 
 import { db } from 'src/lib/db'
-import { ForbiddenError } from '@redwoodjs/graphql-server'
+import { ForbiddenError, RedwoodGraphQLError } from '@redwoodjs/graphql-server'
 
 export const signups: QueryResolvers['signups'] = () => {
   return db.signup.findMany()
@@ -145,16 +145,22 @@ export const removeSignupForJob: MutationResolvers['removeSignupForJob'] =
   async ({ job_id }) => {
     let user_id = context.currentUser.id
 
-    let signup = await db.signup.findUniqueOrThrow({
+    let job_signups = await db.signup.findMany({
       where: {
         on_job: {
-          id: job_id,
+          id: job_id
         },
         for_user: {
-          id: user_id,
-        },
-      },
+          id: user_id
+        }
+      }
     })
+
+    if (job_signups.length !== 1) {
+      throw new RedwoodGraphQLError("What the flip did you do")
+    }
+
+    let signup = job_signups[0]
 
     return db.signup.delete({
       where: {
