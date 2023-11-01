@@ -18,6 +18,18 @@ export const myWatchedTags: QueryResolvers['myWatchedTags'] = async() => {
 }
 
 
+export const getJobsByTag: QueryResolvers['getJobsByTag'] => async({ tag_id }) => {
+
+  return db.job.findMany({
+    where: {
+      tags: {
+        some: {
+          id: tag_id
+        }
+      }
+    }
+  })
+}
 
 export const doIWatchTag: QueryResolvers['doIWatchTag'] = async({ id }) => {
   let user_id = context.currentUser.id

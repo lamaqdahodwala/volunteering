@@ -9,7 +9,8 @@ export const schema = gql`
 
   type Query {
     myWatchedTags: [Tag!]! @requireAuth
-    doIWatchTag(id: Int): Boolean @requireAuth
+    doIWatchTag(id: Int!): Boolean @requireAuth
+    getJobsByTag(tag_id: Int!): [Job!]! @skipAuth
   }
 
   type Mutation {

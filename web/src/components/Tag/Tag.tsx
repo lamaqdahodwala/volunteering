@@ -74,7 +74,7 @@ const [ unwatchTagFunction ] = useMutation(UNWATCH_TAG_MUTATION, {
       <Tooltip anchorSelect={`#${id_name.current}`} clickable>
 <div className="flex flex-col gap-2">
       <p className="w-64">{props.description.length >= 100 ? props.description.substring(0, 100) + "..." : props.description}</p>
-      <Link to="home" className="text-sm uppercase text-info link">More</Link>
+      <Link to="/" className="text-sm uppercase text-info link">More</Link>
 
       {data?.doIWatchTag === true && !loading ? (
       <button className="btn btn-error" onClick={() => toggleWatchState()}>Unwatch Tag</button>
