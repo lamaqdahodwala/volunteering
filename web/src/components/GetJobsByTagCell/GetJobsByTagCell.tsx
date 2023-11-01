@@ -15,6 +15,11 @@ export const QUERY = gql`
         username
       }
       max_signups
+      tags {
+        id
+        name
+        description
+      }
     }
 
     tagInfo(tag_id: $id) {

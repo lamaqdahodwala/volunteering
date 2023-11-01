@@ -12,6 +12,11 @@ export const QUERY = gql`
 
       max_signups
       id
+      tags {
+        id
+        name
+        description
+      }
       description
     }
   }
