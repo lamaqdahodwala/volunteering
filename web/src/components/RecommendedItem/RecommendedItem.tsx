@@ -10,8 +10,8 @@ interface RecommendedItemProps {
   id: number
   description: string
   tags: {
-    description: string,
-    id: number,
+    description: string
+    id: number
     name: string
   }[]
 }
@@ -21,13 +21,16 @@ const RecommendedItem: FC<RecommendedItemProps> = (props) => {
       <input type="checkbox" />
       <div className="collapse-title flex flex-row justify-between">
         <p className="text-2xl font-bold">{props.title}</p>
-        <div className=" flex flex-row gap-3">
-          {props.tags.map((val, index) => <Tag {...val} key={index}></Tag>)}
-        </div>
+
         <p>Click for more info</p>
       </div>
       <div className="collapse-content">
-        <div className="flex w-full flex-row">
+        <div className=" flex flex-row gap-3 p-2">
+          {props.tags.map((val, index) => (
+            <Tag tag={"right-end"} {...val} key={index}></Tag>
+          ))}
+        </div>
+        <div className="flex w-full flex-row p-5">
           <div className="flex-grow">
             <p className="font-bold">Summary</p>
             <p className="w-96">{props.description}</p>

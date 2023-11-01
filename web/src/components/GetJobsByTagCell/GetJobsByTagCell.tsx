@@ -54,7 +54,7 @@ export const Success = ({
   return <div>
     {getJobsByTag.map((val, index) => (
       <>
-        <h1 className='text-2xl '>Searching for tags with name <span className='badge badge-info'>{tagInfo.name}</span></h1>
+        <h1 className='text-2xl '>Searching for jobs tagged <span className='badge badge-info'>{tagInfo.name}</span></h1>
         <br/>
         <RecommendedItem {...val} key={index}></RecommendedItem>
       </>

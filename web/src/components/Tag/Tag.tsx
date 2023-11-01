@@ -7,6 +7,7 @@ interface TagProps {
   name: string
   description: string
   id: number
+  tag?: string
 }
 const CHECK_IF_IM_WATCHING_TAG = gql`
   query AmIWatchingTag($id: Int!) {
@@ -59,13 +60,15 @@ const Tag: FC<TagProps> = (props) => {
 
   let id_name = useRef(`${first_letter}${random_number}`)
 
+  let tooltip_placement = props.tag ? props.tag : "bottom"
+
   return (
     <div>
       <div id={id_name.current} className="badge badge-info">
         {props.name}
       </div>
 
-      <Tooltip anchorSelect={`#${id_name.current}`} clickable>
+      <Tooltip anchorSelect={`#${id_name.current}`} clickable place={tooltip_placement}>
         <div className="flex flex-col gap-2">
           <p className="w-64">
             {props.description.length >= 100
