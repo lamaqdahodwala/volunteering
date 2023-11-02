@@ -30,6 +30,7 @@ export const QUERY = gql`
       datetime
       title
       description
+      duration
       manager {
         username
       }
@@ -50,7 +51,7 @@ export const Failure = ({
 export const beforeQuery = (props) => {
   return {
     variables: {
-      job_id: Number( props.job_id )
+      job_id: Number(props.job_id),
     },
   }
 }
@@ -67,39 +68,46 @@ const SIGN_UP_MUTATION = gql`
 `
 
 const UNSIGN_UP_MUTATION = gql`
-mutation UnSigupUpForJobMutation($id: Int!) {
-  removeSignupForJob(job_id: $id) {
-    id
+  mutation UnSigupUpForJobMutation($id: Int!) {
+    removeSignupForJob(job_id: $id) {
+      id
+    }
   }
-}
 `
 
-export const Success = (
-  {
-    scheduler, amISignedUpFor, job}: CellSuccessProps<FindSchedulerQuery, FindSchedulerQueryVariables>,
-) => {
+export const Success = ({
+  scheduler,
+  amISignedUpFor,
+  job,
+}: CellSuccessProps<FindSchedulerQuery, FindSchedulerQueryVariables>) => {
   let isThereTime = checkForConflictsWithPreviousOrNextJobsAndCheckBreak()
 
-  let [signupFunction] = useMutation(
-    SIGN_UP_MUTATION,
-    {
-      refetchQueries: [QUERY],
-    }
-  )
-let [unsignupFunction] = useMutation(
-    UNSIGN_UP_MUTATION,
-    {
-      refetchQueries: [QUERY],
-    }
-  )
+  let [signupFunction] = useMutation(SIGN_UP_MUTATION, {
+    refetchQueries: [QUERY],
+  })
+  let [unsignupFunction] = useMutation(UNSIGN_UP_MUTATION, {
+    refetchQueries: [QUERY],
+  })
   return (
     <div className="card bg-base-300">
       <div className="card-body">
         <h1 className="card-title">Scheduler</h1>
         <p>{isThereTime ? 'There is enough time' : 'Not enough time'}</p>
-        { amISignedUpFor ?
-        <button className="btn btn-error  flex-grow" onClick={() => unsignupFunction({ variables: {id: job.id}})}>Remove signup</button>
-        : <button className="btn btn-success  flex-grow" onClick={() => signupFunction({variables: {id: job.id}})}>Sign up</button>}
+        {amISignedUpFor ? (
+          <button
+            className="btn btn-error  flex-grow"
+            onClick={() => unsignupFunction({ variables: { id: job.id } })}
+          >
+            Remove signup
+          </button>
+        ) : (
+          <button
+            className="btn btn-success  flex-grow"
+            onClick={() => signupFunction({ variables: { id: job.id } })}
+          >
+            Sign up
+          </button>
+        )}
       </div>
     </div>
   )
@@ -130,7 +138,7 @@ let [unsignupFunction] = useMutation(
     comes_before.forEach((val) => {
       let start_time = DateTime.fromISO(val.datetime)
       let end_time = DateTime.fromISO(val.datetime).plus({
-        hours: val.duration
+        hours: val.duration,
       })
       let interval = Interval.fromDateTimes(start_time, end_time)
 
