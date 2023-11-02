@@ -25,5 +25,5 @@ export const Failure = ({
 export const Success = ({
   schedule,
 }: CellSuccessProps<FindScheduleQuery, FindScheduleQueryVariables>) => {
-
+  return <>{JSON.stringify(schedule)}</>
 }
