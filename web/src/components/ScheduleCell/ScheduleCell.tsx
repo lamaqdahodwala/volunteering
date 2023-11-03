@@ -46,7 +46,7 @@ export const Success = ({
       {schedule.map((val) => {
         let job = val.on_job
         return (
-          <div className="card">
+          <div className="card bg-base-300">
             <h1 className="card-title">{job.datetime}</h1>
             <div className="card-content">
               <Link to={routes.jobDetail({id: String( job.id )})} className="link">{job.title}</Link>

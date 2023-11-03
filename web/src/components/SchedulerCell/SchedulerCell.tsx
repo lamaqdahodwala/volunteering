@@ -102,7 +102,7 @@ export const Success = ({
           >
             Remove signup
           </button>
-          <p><Link to={routes.schedule()}></Link></p>
+          <p><Link to={routes.schedule()}>View in schedule</Link></p>
           </div>
         ) : (
           <button
