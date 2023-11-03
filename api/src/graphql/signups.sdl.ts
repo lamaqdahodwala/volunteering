@@ -18,7 +18,8 @@ export const schema = gql`
   type Mutation {
     signupForJob(job_id: Int!): Signup @requireAuth
     removeSignupForJob(job_id: Int!): Signup! @requireAuth
-    checkIntoJob(job_id: Int!, user_id: Int!, secret_phrase: String!): Signup! @requireAuth(roles: "business")
+    checkIntoJob(job_id: Int!, user_id: Int!, secret_phrase: String!): Signup!
+      @requireAuth(roles: "business")
   }
 
   input CreateSignupInput {

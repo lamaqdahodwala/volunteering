@@ -10,6 +10,7 @@ import {
   useMutation,
 } from '@redwoodjs/web'
 import { useEffect } from 'react'
+import { Link, routes } from '@redwoodjs/router'
 
 export const QUERY = gql`
   query FindSchedulerQuery($job_id: Int!) {
@@ -92,14 +93,17 @@ export const Success = ({
     <div className="card bg-base-300">
       <div className="card-body">
         <h1 className="card-title">Scheduler</h1>
-        <p>{isThereTime ? 'There is enough time' : 'Not enough time'}</p>
+
+        {!amISignedUpFor ? <p>{isThereTime ? 'There is enough time' : 'Not enough time'}</p> : <p>You are signed up</p> }
         {amISignedUpFor ? (
-          <button
+          <div><button
             className="btn btn-error  flex-grow"
             onClick={() => unsignupFunction({ variables: { id: job.id } })}
           >
             Remove signup
           </button>
+          <p><Link to={routes.schedule()}></Link></p>
+          </div>
         ) : (
           <button
             className="btn btn-success  flex-grow"

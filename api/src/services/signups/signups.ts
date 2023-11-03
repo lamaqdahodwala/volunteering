@@ -73,7 +73,7 @@ export const signupForJob: MutationResolvers['signupForJob'] = async ({
 }
 
 export const viewUpcomingJobs: QueryResolvers['viewUpcomingJobs'] = () => {
-  let user_id = context.currentUser.id
+  const user_id = context.currentUser.id
   return db.signup.findMany({
     where: {
       for_user: {
@@ -148,16 +148,16 @@ export const removeSignupForJob: MutationResolvers['removeSignupForJob'] =
     let job_signups = await db.signup.findMany({
       where: {
         on_job: {
-          id: job_id
+          id: job_id,
         },
         for_user: {
-          id: user_id
-        }
-      }
+          id: user_id,
+        },
+      },
     })
 
     if (job_signups.length !== 1) {
-      throw new RedwoodGraphQLError("What the flip did you do")
+      throw new RedwoodGraphQLError('What the flip did you do')
     }
 
     let signup = job_signups[0]
