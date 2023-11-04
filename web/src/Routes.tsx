@@ -10,11 +10,12 @@
 import { Router, Route, Set, Private } from '@redwoodjs/router'
 
 import { useAuth } from './auth'
+import NavbarLayout from './layouts/NavbarLayout/NavbarLayout'
 
 const Routes = () => {
   return (
     <Router useAuth={useAuth}>
-      <Route path="/schedule" page={SchedulePage} name="schedule" />
+      <Set wrap={NavbarLayout}><Route path="/schedule" page={SchedulePage} name="schedule" />
       <Route path="/tag/{id}" page={GetJobsByTagPage} name="getJobsByTag" />
       <Route path="/job/{id}" page={JobDetailPage} name="jobDetail" />
       <Private unauthenticated='login' >
@@ -24,7 +25,7 @@ const Routes = () => {
       <Route path="/signup" page={SignupPage} name="signup" />
       <Route path="/forgot-password" page={ForgotPasswordPage} name="forgotPassword" />
       <Route path="/reset-password" page={ResetPasswordPage} name="resetPassword" />
-      <Route notfound page={NotFoundPage} />
+      <Route notfound page={NotFoundPage} /></Set>
     </Router>
   )
 }
