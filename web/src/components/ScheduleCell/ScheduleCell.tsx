@@ -43,7 +43,7 @@ export const Success = ({
   schedule,
 }: CellSuccessProps<FindScheduleQuery, FindScheduleQueryVariables>) => {
   return (
-    <div className="w-full px-32 py-2">
+    <div className="w-full px-32 py-2 space-y-3">
       {schedule.map((val) => {
         let job = val.on_job
         return (

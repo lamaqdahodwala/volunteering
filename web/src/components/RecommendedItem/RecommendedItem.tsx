@@ -46,7 +46,7 @@ const RecommendedItem: FC<RecommendedItemProps> = (props) => {
               href={`/job/${props.id}`}
               className="btn btn-success btn-outline w-full"
             >
-              Sign up
+              View details
             </a>
           </div>
         </div>

@@ -17,7 +17,7 @@ const NavbarLayout = ({ children }: NavbarLayoutProps) => {
           <Link to="/">Volunteer Log</Link>
         </div>
       </nav>
-      <div>{children}</div>
+      <div className="px-3">{children}</div>
     </div>
   )
 }
