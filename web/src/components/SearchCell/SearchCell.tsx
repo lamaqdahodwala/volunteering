@@ -1,6 +1,7 @@
 import type { FindSearchQuery, FindSearchQueryVariables } from 'types/graphql'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 import RecommendedItem from '../RecommendedItem/RecommendedItem'
+import { useLocation } from '@redwoodjs/router'
 
 export const QUERY = gql`
   query FindSearchQuery($query: String!) {
@@ -21,7 +22,12 @@ export const QUERY = gql`
     }
   }
 `
-export const beforeQuery = ({ query }) => {
+export const beforeQuery = () => {
+  let location = useLocation()
+
+  let params = new URLSearchParams(location.search)
+
+  let query = params.get("query")
   return {
     variables: { query }
   }

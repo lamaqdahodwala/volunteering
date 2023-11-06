@@ -15,7 +15,7 @@ export const schema = gql`
 
   type Query {
     recommended_jobs: [Job!]! @requireAuth
-    search(query: String!): [ Job! ]! @skipAuth
+    search(query: String!, tags: [Tag!]!): [ Job! ]! @skipAuth
     jobDetail(id: Int!): Job! @skipAuth
   }
 
