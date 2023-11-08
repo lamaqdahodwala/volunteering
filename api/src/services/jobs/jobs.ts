@@ -6,36 +6,32 @@ import type {
 
 import { db } from 'src/lib/db'
 
-export const search: QueryResolvers['search'] = async ({ query, tags}) => {
-
-  let tag_names = tags.map((val) => val.name)
-
-  if (tag_names.length > 0){
+export const search: QueryResolvers['search'] = async ({ query, tags }) => {
+  if (!tags) {
     return db.job.findMany({
       where: {
         title: {
-          contains: query
+          contains: query,
         },
-        tags: {
-          some: {
-            name: {
-              in: tag_names
-            }
-          }
-        }
-      }
+      },
     })
   }
+  let tag_ids = tags.split(',')
+
+  let tag_ids_as_number = tag_ids.map((val) => Number(val))
+
+  let conditions = tag_ids_as_number.map((val) => ({tags: { some: {id: val}}}))
 
   return db.job.findMany({
     where: {
-      title: {
-        contains: query
-      }
-    }
+      AND: {
+        title: {
+          contains: query,
+        },
+        AND: conditions
+      },
+    },
   })
-
-
 }
 
 export const recommended_jobs: QueryResolvers['recommended_jobs'] =

@@ -28,8 +28,9 @@ export const beforeQuery = () => {
   let params = new URLSearchParams(location.search)
 
   let query = params.get("query")
+  let tags = params.get("tags")
   return {
-    variables: { query }
+    variables: { query, tags }
   }
 }
 
