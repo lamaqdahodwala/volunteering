@@ -37,9 +37,9 @@ const SearchTagManager: FC<Props> = ({ handler }) => {
 
   function removeTagFromList(tag_id: number) {
     let index_of_tag = tags.indexOf(tag_id)
-    let new_tags = tags.splice(index_of_tag, 1)
+    tags.splice(index_of_tag, 1)
 
-    setTags([...tags ])
+    setTags([...tags])
   }
 
   function saveTags() {
@@ -69,7 +69,9 @@ const SearchTagManager: FC<Props> = ({ handler }) => {
             >
               <p>{val.name}</p>
               {checkIfTagIsInAdded(val.id) ? (
-                <button onClick={() => removeTagFromList(val.id)}>Remove me</button>
+                <button onClick={() => removeTagFromList(val.id)}>
+                  Remove me
+                </button>
               ) : (
                 <button onClick={() => addTagToList(val.id)}>Add me</button>
               )}
@@ -78,7 +80,9 @@ const SearchTagManager: FC<Props> = ({ handler }) => {
         </div>
       )}
       <div className="flex flex-row justify-end gap-2">
-        <button className="btn btn-success btn-outline">Save</button>
+        <form method="dialog">
+        <button className="btn" onClick={() => saveTags()}>Close</button>
+        </form>
       </div>
     </div>
   )

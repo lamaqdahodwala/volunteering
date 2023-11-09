@@ -16,18 +16,18 @@ const SearchBar = () => {
           </button>
           <input
             type="text"
-            placeholder="What do you want to do today?"
             className="w-full bg-base-100 focus:outline-none "
             name="query"
           ></input>
+          <input type="text" hidden={true} value={String(tags)} name="tags"/>
         </div>
       </form>
       <details className="dropdown">
-        <summary className="btn btn-ghost p-0">Tags</summary>
+        <summary className="btn btn-ghost btn-sm">Tags</summary>
         <ul className="dropdown-content z-10 w-36 space-y-1 bg-base-200 p-2">
-          {tags.forEach((val, index) => (
+          {tags.map((val, index) => (
             <li className="w-full" key={index}>
-              Your tags
+              <p>{val}</p>
             </li>
           ))}
           <button
