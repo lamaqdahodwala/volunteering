@@ -28,6 +28,6 @@ DONE 7. Add tag filter pages on the "more" button under tags
 
 DONE 8. Add the search page
 
-
+9. Add the check-in system
 
 
