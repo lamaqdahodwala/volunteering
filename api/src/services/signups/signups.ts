@@ -1,3 +1,4 @@
+import { DateTime, Interval } from 'luxon'
 import type {
   MutationResolvers,
   QueryResolvers,
@@ -10,6 +11,78 @@ import { ForbiddenError, RedwoodGraphQLError } from '@redwoodjs/graphql-server'
 export const signups: QueryResolvers['signups'] = () => {
   return db.signup.findMany()
 }
+
+export const checkForConflicts: QueryResolvers['checkForConflicts'] = async ({
+  job_id,
+}) => {
+  let user_id = context.currentUser.id
+
+  let job = await db.job.findUnique({
+    where: {
+      id: job_id,
+    },
+  })
+
+  let signups = await db.signup.findMany({
+    where: {
+      for_user: {
+        id: user_id,
+      },
+      on_job: {
+        datetime: {
+          gt: new Date(),
+        },
+      },
+    },
+    include: {
+      on_job: true,
+    },
+  })
+
+  let job_start_times = signups.map((signup) =>
+    DateTime.fromJSDate(signup.on_job.datetime)
+  )
+
+  let job_end_times = []
+  for (let index = 0; index < signups.length; index++) {
+    const signup = signups[index]
+    const start_time = job_start_times[index]
+    job_end_times.push(start_time.plus({ hours: signup.on_job.duration }))
+  }
+
+  // Create the intervals of each job's time
+  let time_intervals: Interval[] = []
+  for (let index = 0; index < job_start_times.length; index++) {
+    const start_time = job_start_times[index]
+    const end_time = job_end_times[index]
+
+    let interval = Interval.fromDateTimes(start_time, end_time)
+
+    time_intervals.push(interval)
+  }
+
+  let specified_job_start_time = DateTime.fromJSDate(job.datetime)
+  let specified_job_end_time = specified_job_start_time.plus({
+    hours: job.duration,
+  })
+  let specified_job_interval = Interval.fromDateTimes(
+    specified_job_start_time,
+    specified_job_end_time
+  )
+
+
+  let conflicts = false
+  time_intervals.forEach((interval) => {
+    if (conflicts) return
+
+    if ( interval.overlaps(specified_job_interval) ) {
+      conflicts = true
+    }
+  })
+
+  return conflicts
+}
+
 
 export const amISignedUpFor: QueryResolvers['amISignedUpFor'] = async ({
   job_id,
