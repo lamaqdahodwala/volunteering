@@ -8,6 +8,7 @@ import {
   type CellSuccessProps,
   type CellFailureProps,
   useMutation,
+  useQuery,
 } from '@redwoodjs/web'
 import { useEffect } from 'react'
 import { Link, routes } from '@redwoodjs/router'
@@ -76,102 +77,94 @@ const UNSIGN_UP_MUTATION = gql`
   }
 `
 
+const CHECK_FOR_CONFLICTS = gql`
+  query CheckForConflicts($id: Int!) {
+    checkForConflicts(job_id: $id)
+  }
+`
+
 export const Success = ({
   scheduler,
   amISignedUpFor,
   job,
 }: CellSuccessProps<FindSchedulerQuery, FindSchedulerQueryVariables>) => {
-  let isThereTime = checkForConflictsWithPreviousOrNextJobsAndCheckBreak()
+  const conflicts = useQuery(CHECK_FOR_CONFLICTS, {
+    variables: {
+      id: job.id,
+    },
+  })
 
   let [signupFunction] = useMutation(SIGN_UP_MUTATION, {
-    refetchQueries: [QUERY],
+    refetchQueries: [QUERY, CHECK_FOR_CONFLICTS],
   })
   let [unsignupFunction] = useMutation(UNSIGN_UP_MUTATION, {
-    refetchQueries: [QUERY],
+    refetchQueries: [QUERY, CHECK_FOR_CONFLICTS],
   })
   return (
     <div className="card bg-base-300">
       <div className="card-body">
         <h1 className="card-title">Scheduler</h1>
 
-        {!amISignedUpFor ? <p>{isThereTime ? 'There is enough time' : 'Not enough time'}</p> : <p>You are signed up</p> }
-        {amISignedUpFor ? (
-          <div><button
-            className="btn btn-error  flex-grow"
-            onClick={() => unsignupFunction({ variables: { id: job.id } })}
-          >
-            Remove signup
-          </button>
-          <p><Link to={routes.schedule()} className="link">View in schedule</Link></p>
+        {conflicts.loading && <div>Fetching results...</div>}
+        {conflicts.error && (
+          <p>
+            Error: <span className="text-error">{String(conflicts.error)}</span>
+          </p>
+        )}
+        {conflicts.data && (
+          <div>
+            {amISignedUpFor ? (
+              <div>
+                <button
+                  className="btn btn-error btn-outline"
+                  onClick={() =>
+                    unsignupFunction({
+                      variables: {
+                        id: job.id,
+                      },
+                    })
+                  }
+                >
+                  Remove signup
+                </button>
+                <p>
+                  <Link to={routes.schedule()} className="link">
+                    View in schedule
+                  </Link>
+                </p>
+              </div>
+            ) : (
+              <div>
+                {conflicts.data.checkForConflicts === true ? (
+                  <div>
+                    <p className="text-error">There are conflicts!</p>
+                    <p>
+                      <Link to={routes.schedule()} className="link">
+                        Check schedule
+                      </Link>
+                    </p>
+                  </div>
+                ) : (
+                  <p className="text-success">No conflicts.</p>
+                )}
+                <button
+                  className="btn btn-success btn-outline"
+                  disabled={conflicts.data.checkForConflicts}
+                  onClick={() =>
+                    signupFunction({
+                      variables: {
+                        id: job.id,
+                      },
+                    })
+                  }
+                >
+                  Sign up
+                </button>
+              </div>
+            )}
           </div>
-        ) : (
-          <button
-            className="btn btn-success  flex-grow"
-            onClick={() => signupFunction({ variables: { id: job.id } })}
-          >
-            Sign up
-          </button>
         )}
       </div>
     </div>
   )
-
-  function checkForConflictsWithPreviousOrNextJobsAndCheckBreak() {
-    let isThereTime: boolean = true
-
-    let upcoming_jobs: Array<any> = scheduler.map((val) => val.on_job)
-    upcoming_jobs.push(job)
-
-    upcoming_jobs.sort((a, b) => {
-      if (a < b) {
-        return -1
-      }
-      if (a > b) {
-        return 1
-      }
-      return 0
-    })
-
-    let index_of_this_job = upcoming_jobs.indexOf(job)
-    let comes_before = upcoming_jobs.slice(0, index_of_this_job)
-    let comes_after = upcoming_jobs.slice(index_of_this_job + 1)
-
-    let this_job_start_time = DateTime.fromISO(job.datetime)
-    let this_job_end_time = this_job_start_time.plus({ hours: job.duration })
-
-    comes_before.forEach((val) => {
-      let start_time = DateTime.fromISO(val.datetime)
-      let end_time = DateTime.fromISO(val.datetime).plus({
-        hours: val.duration,
-      })
-      let interval = Interval.fromDateTimes(start_time, end_time)
-
-      if (!interval.contains(this_job_start_time)) {
-        isThereTime = false
-        return
-      }
-
-      let diff = end_time.diff(this_job_start_time, ['hours']).toObject()
-      if (diff.hours <= 1) {
-        isThereTime = false
-        return
-      }
-    })
-
-    if (isThereTime) return isThereTime
-
-    comes_after.forEach((val) => {
-      let start_time = DateTime.fromISO(val.datetime)
-      let end_time = DateTime.fromISO(val.datetime).plus({
-        hours: val.duration,
-      })
-      let interval = Interval.fromDateTimes(start_time, end_time)
-
-      if (!interval.contains(this_job_end_time)) {
-        isThereTime = false
-        return
-      }
-    })
-    return isThereTime
-  }
 }
