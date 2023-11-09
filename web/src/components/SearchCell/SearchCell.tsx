@@ -4,8 +4,8 @@ import RecommendedItem from '../RecommendedItem/RecommendedItem'
 import { useLocation } from '@redwoodjs/router'
 
 export const QUERY = gql`
-  query FindSearchQuery($query: String!) {
-    search: search(query: $query) {
+  query FindSearchQuery($query: String!, $tags: String!) {
+    search: search(query: $query, tags: $tags) {
       title
       manager {
         username
@@ -36,7 +36,7 @@ export const beforeQuery = () => {
 
 export const Loading = () => <div>Loading...</div>
 
-export const Empty = () => <div>Empty</div>
+export const Empty = () => <div>No results found. Search again?</div>
 
 export const Failure = ({
   error,

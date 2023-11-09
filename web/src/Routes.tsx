@@ -15,9 +15,9 @@ import NavbarLayout from './layouts/NavbarLayout/NavbarLayout'
 const Routes = () => {
   return (
     <Router useAuth={useAuth}>
-      <Route path="/search" page={SearchPage} name="search" />
       <Set wrap={NavbarLayout}>
         <Route path="/schedule" page={SchedulePage} name="schedule" />
+        <Route path="/search" page={SearchPage} name="search" />
         <Route path="/tag/{id}" page={GetJobsByTagPage} name="getJobsByTag" />
         <Route path="/job/{id}" page={JobDetailPage} name="jobDetail" />
         <Private unauthenticated="login">
