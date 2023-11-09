@@ -17,6 +17,17 @@ export const myWatchedTags: QueryResolvers['myWatchedTags'] = async() => {
   return user.watches
 }
 
+export const searchTags: QueryResolvers['searchTags'] = async({name}) => {
+  return db.tag.findMany({
+    where: {
+      name:{
+        contains: name
+      }
+    },
+    take: 3
+
+  })
+}
 
 export const getJobsByTag: QueryResolvers['getJobsByTag'] = async({ tag_id }) => {
   return db.job.findMany({
