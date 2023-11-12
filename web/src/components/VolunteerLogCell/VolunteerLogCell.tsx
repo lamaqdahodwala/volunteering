@@ -40,13 +40,13 @@ export const Failure = ({
 export const Success = ({
   volunteerLog,
 }: CellSuccessProps<FindVolunteerLogQuery, FindVolunteerLogQueryVariables>) => {
-  const calculateTotalHours = () => {
-    return volunteerLog.reduce((acc, val) => acc + val.on_job.duration, 0)
+  const calculateTotalHours = (log) => {
+    return log.reduce((acc, val) => acc + val.on_job.duration, 0)
   }
   return (
     <div className="space-y-3">
       <h1 className="text-center text-3xl font-bold">
-        {calculateTotalHours()} hours served
+        {calculateTotalHours(volunteerLog)} hours served
       </h1>
       {volunteerLog.map((signup, index) => (
         <div key={index} className="card bg-base-300">
