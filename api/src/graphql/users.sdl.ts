@@ -9,6 +9,12 @@ export const schema = gql`
 
   type Query {
     user(id: Int!): User! @requireAuth
+    doesUserHaveSecretPhraseSetUp: Boolean! @requireAuth
+
+  }
+
+  type Mutation {
+    setSecretPhrase(phrase: String!): User! @requireAuth
   }
 
   input CreateUserInput {

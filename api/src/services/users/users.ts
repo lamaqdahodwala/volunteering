@@ -8,6 +8,38 @@ export const user: QueryResolvers['user'] = ({ id }) => {
   })
 }
 
+export const doesUserHaveSecretPhraseSetUp: QueryResolvers['doesUserHaveSecretPhraseSetUp'] = async() => {
+  let user_id = context.currentUser.id
+
+  let user = await db.user.findUnique({
+    where: {
+      id: user_id
+    }
+  })
+  return !!user.secret_phrase
+}
+
+export const setSecretPhrase: MutationResolvers['setSecretPhrase'] = async({ phrase }) => {
+  let user_id = context.currentUser.id
+
+  let user = await db.user.findUnique({
+    where: {
+      id: user_id
+    }
+  })
+
+  if (user.secret_phrase) return
+
+  return await db.user.update({
+    where: {
+      id: user_id
+    },
+    data: {
+      secret_phrase: phrase
+    }
+  })
+}
+
 export const User: UserRelationResolvers = {
   manages: (_obj, { root }) => {
     return db.user.findUnique({ where: { id: root?.id } }).manages()

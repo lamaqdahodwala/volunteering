@@ -5,7 +5,9 @@ export const QUERY = gql`
   query FindUserQuery($id: Int!) {
     user: user(id: $id) {
       id
+      username
     }
+
   }
 `
 
@@ -22,5 +24,9 @@ export const Failure = ({
 export const Success = ({
   user,
 }: CellSuccessProps<FindUserQuery, FindUserQueryVariables>) => {
-  return <div>{JSON.stringify(user)}</div>
+  return (
+    <div>
+      <p className="text-lg font-bold">{user.username}</p>
+    </div>
+  )
 }

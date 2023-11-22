@@ -15,6 +15,7 @@ import NavbarLayout from './layouts/NavbarLayout/NavbarLayout'
 const Routes = () => {
   return (
     <Router useAuth={useAuth}>
+      <Route path="/user/{id}" page={UserPage} name="user" />
       <Route path="/log" page={VolunteerLogPage} name="volunteerLog" />
       <Set wrap={NavbarLayout} prerender>
         <Route path="/schedule" page={SchedulePage} name="schedule" />
