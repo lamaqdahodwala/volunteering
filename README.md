@@ -30,4 +30,5 @@ DONE 8. Add the search page
 
 9. Add the check-in system
 
+10. Add a navbar that adapts to whether your're logged in or not
 
