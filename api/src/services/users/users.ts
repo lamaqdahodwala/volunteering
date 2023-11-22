@@ -9,14 +9,14 @@ export const user: QueryResolvers['user'] = ({ id }) => {
 }
 
 export const doesUserHaveSecretPhraseSetUp: QueryResolvers['doesUserHaveSecretPhraseSetUp'] = async() => {
-  let user_id = context.currentUser.id
+    let user_id = context.currentUser.id
 
-  let user = await db.user.findUnique({
-    where: {
-      id: user_id
-    }
-  })
-  return !!user.secret_phrase
+    let user = await db.user.findUnique({
+      where: {
+        id: user_id
+      }
+    })
+    return !!user.secret_phrase
 }
 
 export const setSecretPhrase: MutationResolvers['setSecretPhrase'] = async({ phrase }) => {
