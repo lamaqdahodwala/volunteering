@@ -10,7 +10,7 @@ DONE 3. Integrate scheduler with the detail view page
 
 
 
-4. Add volunteer Log
+DONE 4. Add volunteer Log
 
 
 
