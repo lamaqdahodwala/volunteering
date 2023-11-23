@@ -16,9 +16,9 @@ const Routes = () => {
   return (
     <Router useAuth={useAuth}>
       <Route path="/user/{id}" page={UserPage} name="user" />
-      <Route path="/log" page={VolunteerLogPage} name="volunteerLog" />
       <Set wrap={NavbarLayout} prerender>
         <Route path="/schedule" page={SchedulePage} name="schedule" />
+        <Route path="/log" page={VolunteerLogPage} name="volunteerLog" />
         <Route path="/search" page={SearchPage} name="search" />
         <Route path="/tag/{id}" page={GetJobsByTagPage} name="getJobsByTag" />
         <Route path="/job/{id}" page={JobDetailPage} name="jobDetail" />
