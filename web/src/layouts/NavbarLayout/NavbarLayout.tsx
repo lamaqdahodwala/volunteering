@@ -1,4 +1,5 @@
 import { Link, routes } from '@redwoodjs/router'
+import Navbar from 'src/components/Navbar/Navbar'
 import SearchBar from 'src/components/SearchBar/SearchBar'
 
 type NavbarLayoutProps = {
@@ -14,11 +15,7 @@ const NavbarLayout = ({ children }: NavbarLayoutProps) => {
         </Link>
 
         <SearchBar></SearchBar>
-        <div className="flex flex-row gap-3">
-          <Link to={routes.home()}>Discover</Link>
-          <Link to={routes.schedule()}>Schedule</Link>
-          <Link to={routes.volunteerLog()}>Volunteer Log</Link>
-        </div>
+        <Navbar></Navbar>
       </nav>
       <div className="px-3">{children}</div>
     </div>
