@@ -30,12 +30,18 @@ export const setSecretPhrase: MutationResolvers['setSecretPhrase'] = async({ phr
 
   if (user.secret_phrase) return
 
-  return await db.user.update({
+  await db.user.update({
     where: {
       id: user_id
     },
     data: {
       secret_phrase: phrase
+    },
+  })
+
+  return await db.user.findUnique({
+    where: {
+      id: user_id
     }
   })
 }

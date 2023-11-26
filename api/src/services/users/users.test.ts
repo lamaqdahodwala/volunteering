@@ -1,7 +1,7 @@
 import type { User } from '@prisma/client'
 
 import type { StandardScenario } from './users.scenarios'
-import { doesUserHaveSecretPhraseSetUp } from './users'
+import { doesUserHaveSecretPhraseSetUp, setSecretPhrase } from './users'
 
 // Generated boilerplate tests do not account for all circumstances
 // and can fail without adjustments, e.g. Float.
@@ -37,3 +37,12 @@ describe('doesUserHaveSecretPhraseSetUp', () => {
   )
 })
 
+
+describe("setSecretPhrase", () => {
+  scenario("sets the secret phrase successfully", async(scenario: StandardScenario) => {
+    mockCurrentUser({id: 1})
+    let result = await setSecretPhrase({ phrase: "my phrase"})
+
+    expect(result.secret_phrase).toEqual("my phrase")
+  })
+})
