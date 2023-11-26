@@ -1,7 +1,7 @@
 import type { Tag } from '@prisma/client'
 
 import type { StandardScenario } from './tags.scenarios'
-import { myWatchedTags } from './tags'
+import { myWatchedTags, searchTags } from './tags'
 
 // Generated boilerplate tests do not account for all circumstances
 // and can fail without adjustments, e.g. Float.
@@ -34,4 +34,16 @@ describe('myWatchedTags', () => {
       expect(result).toEqual([])
     }
   )
+})
+
+describe("searchTags", () => {
+  scenario("searches for a query that only matches one tag", async(scenario: StandardScenario) => {
+    let result = await searchTags({ name: "Health"})
+    expect(result).toEqual([ scenario.tag.one ])
+  })
+
+  scenario("searches for a query that matches multiple tags", async(scenario: StandardScenario) => {
+    let result = await searchTags({ name: "care" })
+    expect(result).toEqual([ scenario.tag.one, scenario.tag.three])
+  })
 })
