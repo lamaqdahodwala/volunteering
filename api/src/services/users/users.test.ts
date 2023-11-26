@@ -1,7 +1,7 @@
 import type { User } from '@prisma/client'
 
-import { users } from './users'
 import type { StandardScenario } from './users.scenarios'
+import { doesUserHaveSecretPhraseSetUp } from './users'
 
 // Generated boilerplate tests do not account for all circumstances
 // and can fail without adjustments, e.g. Float.
@@ -9,10 +9,31 @@ import type { StandardScenario } from './users.scenarios'
 //       https://redwoodjs.com/docs/testing#testing-services
 // https://redwoodjs.com/docs/testing#jest-expect-type-considerations
 
-describe('users', () => {
-  scenario('returns all users', async (scenario: StandardScenario) => {
-    const result = await users()
+describe('doesUserHaveSecretPhraseSetUp', () => {
+  scenario(
+    'returns true if if the secret phrase is set',
+    async (scenario: StandardScenario) => {
+      mockCurrentUser({
+          id: 2,
+          username: '',
+          roles: ''
+      })
+      let result = await doesUserHaveSecretPhraseSetUp()
 
-    expect(result.length).toEqual(Object.keys(scenario.user).length)
-  })
+      expect(result).toBe(true)
+    }
+  )
+  scenario(
+    "returns false if it isn't set",
+    async (scenario: StandardScenario) => {
+      mockCurrentUser({
+          id: 1,
+          username: '',
+          roles: ''
+      })
+      let result = await doesUserHaveSecretPhraseSetUp()
+      expect(result).toBe(false)
+    }
+  )
 })
+
