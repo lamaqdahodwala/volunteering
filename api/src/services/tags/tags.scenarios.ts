@@ -6,10 +6,11 @@ export const standard = defineScenario<
   'tag' | 'user'
 >({
   tag: {
-    one: { data: { name: 'Healthcare', description: 'String' } },
+    one: { data: {id: 1, name: 'Healthcare', description: 'String' } },
     two: {
       data: {
         name: 'Sports',
+        id: 2,
         description: 'String',
         watched_by: {
           create: {
@@ -21,7 +22,7 @@ export const standard = defineScenario<
         },
       },
     },
-    three: {data: {name: "Senior Citizen Care", description: "String"}}
+    three: {data: {id: 3, name: "Senior Citizen Care", description: "String"}}
   },
   user: {
     one: {

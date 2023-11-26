@@ -1,7 +1,7 @@
 import type { Tag } from '@prisma/client'
 
 import type { StandardScenario } from './tags.scenarios'
-import { myWatchedTags, searchTags } from './tags'
+import { doIWatchTag, myWatchedTags, searchTags } from './tags'
 
 // Generated boilerplate tests do not account for all circumstances
 // and can fail without adjustments, e.g. Float.
@@ -47,3 +47,17 @@ describe("searchTags", () => {
     expect(result).toEqual([ scenario.tag.one, scenario.tag.three])
   })
 })
+
+describe("doIWatchTag", () => {
+  scenario("check to see if a user watches a certain tag", async(scenario: StandardScenario) => {
+    mockCurrentUser({id: 2})
+    let result1 = await doIWatchTag({ id: 1 })
+    let result2 = await doIWatchTag({ id: 2 })
+    let result3 = await doIWatchTag({ id: 3 })
+    expect(result1).toBe(false)
+    expect(result2).toBe(true)
+    expect(result3).toBe(false)
+  })
+})
+
+
