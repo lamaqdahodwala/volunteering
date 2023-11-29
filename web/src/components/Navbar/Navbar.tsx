@@ -1,20 +1,34 @@
 import { Link, routes } from '@redwoodjs/router'
 import { useAuth } from 'src/auth'
 
+interface CurrentUser {
+  id: number
+  username?: string
+}
+
+interface Auth {
+  isAuthenticated: boolean
+  currentUser: CurrentUser | null
+}
+
 const Navbar = () => {
-  let auth = useAuth()
+  const auth = useAuth()
+
+  const isAuthenticated: boolean = auth?.isAuthenticated || false
+  const currentUser: CurrentUser | null = auth?.currentUser || null
 
   return (
     <div>
-      {auth.isAuthenticated ? (
+      {isAuthenticated ? (
         <div className="flex flex-row gap-3">
           <Link className="p-1" to={routes.home()}>Discover</Link>
           <Link className="p-1" to={routes.schedule()}>Schedule</Link>
           <Link className="p-1" to={routes.volunteerLog()}>Volunteer Log</Link>
-          <Link className="p-1" to={routes.user({ id: String(auth.currentUser.id) })}>
-
-          <p className='text-info border border-1 p-1 rounded-lg border-neutral'>{auth.currentUser.username}</p>
-          </Link>
+          {currentUser && currentUser.username && (
+            <Link className="p-1" to={routes.user({ id: String(currentUser.id) })}>
+              <p className='text-info border border-1 p-1 rounded-lg border-neutral'>{currentUser.username}</p>
+            </Link>
+          )}
         </div>
       ) : (
         <div>
