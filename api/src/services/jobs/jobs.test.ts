@@ -30,4 +30,21 @@ describe("search", () => {
     expect(result).toHaveLength(2)
   })
 
+  scenario("searches by tag", async(scenario) => {
+    let result = await search({tags: "2"})
+    expect(result).toEqual([scenario.job.two])
+    expect(result).toHaveLength(1)
+  })
+  scenario("searches by tag where there are multiple results", async(scenario) => {
+    let result = await search({tags: "1"})
+    expect(result).toEqual([scenario.job.one, scenario.job.two])
+    expect(result).toHaveLength(2)
+  })
+
+  scenario("searches by tag where there are multiple tags", async(scenario) => {
+    let result = await search({tags: "1,2"})
+    expect(result).toEqual([scenario.job.two])
+    expect(result).toHaveLength(1)
+  })
+
 })
