@@ -1,7 +1,7 @@
 import type { Job } from '@prisma/client'
 
 import type { StandardScenario } from './jobs.scenarios'
-import { search } from './jobs'
+import { recommended_jobs, search } from './jobs'
 
 // Generated boilerplate tests do not account for all circumstances
 // and can fail without adjustments, e.g. Float.
@@ -51,5 +51,27 @@ describe("search", () => {
     let result = await search({query: "hospital", tags:"2"})
     expect(result).toEqual([])
     expect(result).toHaveLength(0)
+  })
+})
+
+describe("recommended_jobs", () => {
+  scenario("recommends jobs that have tags you watch", async(scenario) => {
+    mockCurrentUser({id: 1})
+    let result = await recommended_jobs()
+    expect(result).toEqual([scenario.job.two])
+
+  })
+
+  scenario("does not recommend jobs that don't share any tags", async(scenario) => {
+    mockCurrentUser({id: 3})
+    let result = await recommended_jobs()
+    expect(result).toEqual([])
+    expect(result).toHaveLength(0)
+  })
+
+  scenario("returns all jobs if you have no watched tags", async(scenario) => {
+    mockCurrentUser({id: 4})
+    let result = await recommended_jobs()
+    expect(result).toHaveLength(2)
   })
 })

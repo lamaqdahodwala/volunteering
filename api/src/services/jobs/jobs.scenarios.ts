@@ -20,6 +20,13 @@ export const standard = defineScenario<
         description: 'Placeholder',
       },
     },
+    three: {
+      data: {
+        id: 3,
+        name: 'Something irrelevant',
+        description: 'Placeholder',
+      },
+    },
   },
   user: {
     one: {
@@ -29,8 +36,54 @@ export const standard = defineScenario<
         roles: 'business',
         hashedPassword: 'pass',
         salt: 'salt',
+        watches: {
+          connect: [
+            {
+              id: 2
+            }
+          ]
+        }
       },
     },
+    three:{
+      data: {
+        username: "other high school student",
+        id: 3,
+        hashedPassword: "pass",
+        salt: "salt",
+        watches: {
+          connect: [
+            {
+              id: 3
+            }
+          ]
+        }
+      }
+    },
+    two: {
+      data: {
+        username: "high school student",
+        id: 2,
+        hashedPassword: "pass",
+        salt: "salt",
+        watches: {
+          connect: [
+            {
+              id: 1
+            }
+          ]
+        }
+      }
+    },
+    four:{
+      data: {
+        username: "yet another high school student",
+        id: 4,
+        hashedPassword: "pass",
+        salt: "salt",
+
+      }
+    }
   },
   job: {
     one: {
