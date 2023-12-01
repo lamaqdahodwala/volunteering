@@ -35,7 +35,7 @@ export const standard = defineScenario<
   job: {
     one: {
       data: {
-        title: 'String',
+        title: 'RWJ Hospital',
         description: 'String',
         max_signups: 2647526,
         datetime: new Date(),
@@ -50,7 +50,7 @@ export const standard = defineScenario<
     },
     two: {
       data: {
-        title: 'String',
+        title: 'RWJ Science research lab',
         description: 'String',
         max_signups: 8514952,
         minimum_age: 2965536,

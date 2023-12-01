@@ -1,6 +1,7 @@
 import type { Job } from '@prisma/client'
 
 import type { StandardScenario } from './jobs.scenarios'
+import { search } from './jobs'
 
 // Generated boilerplate tests do not account for all circumstances
 // and can fail without adjustments, e.g. Float.
@@ -17,7 +18,16 @@ import type { StandardScenario } from './jobs.scenarios'
 // })
 //
 describe("search", () => {
-  scenario("searches for a keyword", async() => {
-
+  scenario("searches for a keyword", async(scenario) => {
+    let result = await search({query: "Hospital"})
+    expect(result).toEqual([ scenario.job.one ])
+    expect(result).toHaveLength(1)
   })
+
+  scenario("searches for a keyword where there are multiple results", async(scenario) => {
+    let result = await search({query: "RWJ"})
+    expect(result).toEqual([ scenario.job.one, scenario.job.two ])
+    expect(result).toHaveLength(2)
+  })
+
 })
