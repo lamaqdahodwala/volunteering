@@ -47,4 +47,9 @@ describe("search", () => {
     expect(result).toHaveLength(1)
   })
 
+  scenario("search by tag and query", async(scenario) => {
+    let result = await search({query: "hospital", tags:"2"})
+    expect(result).toEqual([])
+    expect(result).toHaveLength(0)
+  })
 })
